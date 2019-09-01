@@ -1,0 +1,16 @@
+html
+    include includes/head
+    body
+        form.block-panel(action='/auth' method='POST')
+            h1=user
+            h2.block-panel-heading Sign in
+            input.form-control.credentials(type="text" name='email' placeholder="Email address" required="" autofocus="")
+            input.form-control.credentials(type="password" name='pass' placeholder="Password" required="")
+            p.text-danger=error
+            label.checkbox Remember me
+                input(type="checkbox" value="remember-me")
+            button.btn.btn-lg.btn-primary.btn-block(type="submit") Login
+            a(href='/register') Sign up
+        script(src='https://code.jquery.com/jquery.js')
+            include js/bootstrap.min.js
+

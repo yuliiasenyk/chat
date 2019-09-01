@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "name": {
+    "firstName": "George",
+    "lastName": "Bush"
+  },
+  "description": "some description",
+  "login": "admin",
+  "status": "UserStatus.active",
+  "isAdmin": true,
+  "permissions": true
+}
