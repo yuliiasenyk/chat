@@ -1,0 +1,10 @@
+# dependencies
+/node_modules
+/logs
+
+# Default ignored files
+/workspace.xml
+
+# IDEs and editors
+/.idea
+.chat

@@ -1,0 +1,34 @@
+html
+    include includes/head
+    body
+        include includes/nav
+        a(href='/logout')
+            button.btn.btn-lg.btn-primary Log out
+        div.block-panel
+        h2.block-panel-heading Room #312
+            div.row.message-input
+                div.col-lg-12
+                    div.input-group
+                        span.input-group-btn
+                            form(method='POST', action='/message')
+                                button.btn.btn-default(type="submit") Send
+                                input.form-control(name='message')
+            div.panel.panel-default
+                div.panel-body.chat-body
+                    span.message
+                        span.user(style="color: #0A6")=user
+                        span=message
+                    span.message
+                        span.user(style="color: #A00") User#2
+                        span : Hi
+                    span.message
+                        span.user(style="color: #06F") Alien
+                        span : Greatings, earthlings! I come in peace. Klaatu barada nikto. Here is my gift to humanity
+                    span.message
+                        span.user(style="color: #A00") User#2
+                        span : Wow
+                    span.message
+                        span.user(style="color: #0A6") User#1
+                        span : Radical, dude!
+        script(src='https://code.jquery.com/jquery.js')
+            include js/bootstrap.min.js
