@@ -32,8 +32,17 @@ register.post('/newUser', [
     //         }
     //     });
     // });
-    user.encryptPassword(req.body.password, req.body.username, req.body.email)
-
+    User.encryptPassword(req.body.password, function(err){
+        User.create({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+    }).then((data) => {
+        if(data) {
+            req.session._id = name;
+            res.redirect('/lobby');
+        }
+    })})
 });
 
 module.exports = register;

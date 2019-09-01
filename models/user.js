@@ -19,33 +19,14 @@ const userSchema = new mongoose.Schema({
     },
     groups: Array,
 });
-let User = mongoose.model("User", userSchema);
 
 userSchema.methods = {
-    authenticate: function (plainPassword) {
-        return bcrypt.compare(plainPassword, this.passwordEncrypted, function (err, response) {
-            console.log(user.passwordEncrypted);
-            if (!response) {
-                res.send('Incorrect password');
-            } else {
-                req.session._id = user.username;
-                res.send('entered');
-            }
-        });
+    authenticate: function (plainPassword, cb) {
+        return bcrypt.compare(plainPassword, this.passwordEncrypted, cb);
     },
 
-    encryptPassword: function (password, name, email) {
-        return bcrypt.hash(password, SALT_WORK_FACTOR);
-        User.create({
-            username: name,
-            email: email,
-            password: password,
-        }).then((data) => {
-            if(data) {
-                req.session._id = name;
-                res.redirect('/lobby');
-            }
-        })
+    encryptPassword: function (password) {
+        return bcrypt.hash(password, SALT_WORK_FACTOR, cb);
     }
 }
 userSchema.virtual('password')
@@ -56,5 +37,7 @@ userSchema.virtual('password')
     .get(function() {
         return this._password;
     });
+
+let User = mongoose.model("User", userSchema);
 
 module.exports = User;

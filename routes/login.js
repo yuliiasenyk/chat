@@ -30,7 +30,15 @@ login.post('/auth', function (req, res) {
             //         res.send('entered');
             //     }
             // });
-            user.authenticate(req.body.password)
+            user.authenticate(req.body.password, function (err, response) {
+                console.log(user.passwordEncrypted);
+                if (!response) {
+                    res.send('Incorrect password');
+                } else {
+                    req.session._id = user.username;
+                    res.send('entered');
+                }
+            })
             }
     });
 });
