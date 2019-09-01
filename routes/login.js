@@ -1,6 +1,7 @@
 const express = require('express');
 const login = express.Router();
 const User = require('.././models/user');
+const bcrypt = require('bcrypt');
 
 login.authenticated = function(req, res, next) {
     if (req.session._id)
@@ -15,16 +16,22 @@ login.get('/login', function (req, res) {
 
 login.post('/auth', function (req, res) {
     console.log('BODY:', req.body);
-    User.findOne({email: req.body.email, password: req.body.pass}, (err, users) => {
-        if (err) {
-            res.render('login', {title: 'Login', error: 'invalid data'});
-        } else   {
-                req.session._id = users.username;
-                console.log(users.username);
-                res.render('lobby', {title: 'Lobby'});
-            }
-    })
-})
+    User.findOne({email: req.body.email}).then(function (user) {
+        if (!user) {
+            res.send('Incorrect login');
+        } else {
+            bcrypt.compare(req.body.password, user.password, function (err, response) {
+                console.log(user.password);
+                if (!response) {
+                    res.send('Incorrect password');
+                } else {
+                    req.session._id = user.username;
+                    res.send('entered');
+                }
+            });
+        }
+    });
+});
 
 let user;
 User.findOne({username: 'A'}, (err, users) => {
