@@ -1,0 +1,20 @@
+html
+    include includes/head
+    body
+        a.pull-right(href='/logout')
+            button.btn.btn-secondary Log out
+        div.block-panel
+            div.row
+                div.col-lg-12
+                    div.input-group
+                        form(method='POST', action='/lobby')
+                            span.input-group-btn
+                                button.btn.btn-primary(type="submit") Create room
+                            input.form-control(name='newRoom')
+            h1 Available rooms
+            div.list-group
+                each val in rooms
+                    a.list-group-item(href='/'+val.url)= val.title
+        div= groups
+        script(src='https://code.jquery.com/jquery.js')
+            include js/bootstrap.min.js

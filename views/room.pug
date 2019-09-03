@@ -1,0 +1,31 @@
+html
+    include includes/head
+    script(src="/socket.io/socket.io.js")
+    script(src="https://code.jquery.com/jquery-1.11.1.js")
+    script
+        include js/socket.js
+    body
+        a(href='/lobby')
+            button.btn.btn-lg.btn-primary Lobby
+        a.pull-right(href='/logout')
+            button.btn.btn-secondary Log out
+        div.block-panel
+        h2.block-panel-heading.text-center= roomName
+        div.row.message-input
+            div.col-lg-12
+                div.input-group
+                    span.input-group-btn
+                        form(method='POST', action='/room')
+                            button.btn.btn-default(type="submit") Send
+                            input.form-control(name='message', id="m")
+        div.panel.panel-default
+            div.panel-body.chat-body
+                ul(id="messages")
+                    each val in messages
+                        li.message.row
+                            span.user.text-primary.col-sm-2= val.user
+                            span.col-sm-7= val.message
+                            small.col-sm-3.text-danger= val.time
+        script(src='https://code.jquery.com/jquery.js')
+        script
+            include js/bootstrap.min.js
