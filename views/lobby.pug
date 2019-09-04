@@ -1,5 +1,7 @@
 html
     include includes/head
+    script
+        include ./js/toggleMembership.js
     body
         a.pull-right(href='/logout')
             button.btn.btn-secondary Log out
@@ -10,11 +12,12 @@ html
                         form(method='POST', action='/lobby')
                             span.input-group-btn
                                 button.btn.btn-primary(type="submit") Create room
-                            input.form-control(name='newRoom')
-            h1 Available rooms
+                            input.form-control(name='newRoom' required='')
+            h1(onclick='b("click")') Available rooms
             div.list-group
                 each val in rooms
                     a.list-group-item(href='/'+val.url)= val.title
+                    button.btn.btn-sm.btn-link join or leave
         div= groups
         script(src='https://code.jquery.com/jquery.js')
             include js/bootstrap.min.js

@@ -26,8 +26,8 @@ register.post('/newUser', [
             passwordHashed: hash,
         }).then((user) => {
             if(user) {
-                req.session._id = user.username;
-                res.render('lobby', {  title: 'Lobby'});
+                req.session.user = user.username;
+                res.redirect('lobby');
             }
         })})
 });

@@ -4,8 +4,7 @@ const User = require('.././models/user');
 const logger = require('../config/winston');
 
 login.authenticated = function(req, res, next) {
-    // if (req.session._id)
-    if (true)
+    if (req.session.user)
             return next();
     else
         return res.sendStatus(401);
@@ -15,7 +14,11 @@ login.get('/login', function (req, res) {
     res.render('login', { title: 'Login', error: ''})
 });
 
-login.post('/auth', function (req, res) {
+login.post('/auth', loginUser);
+
+login.get('/logout', logoutUser);
+
+function loginUser(req, res) {
     logger.verbose(`BODY: `, req.body);
     User.findOne({email: req.body.email}).then(function (user) {
         if (!user) {
@@ -24,20 +27,18 @@ login.post('/auth', function (req, res) {
             logger.verbose(`login user data:  ${user.username} ${user.passwordHashed}`);
             user.authenticate(req.body.pass, function (err, response) {
                 logger.verbose(`Auth result:  ${response}, ${req.body.pass}, ${user.passwordHashed}`);
-                 if (!response) {
-                     res.render('login', { title: 'Login', error: 'Incorrect data'})
-                 } else {
-                     req.session._id = user.username;
-                     res.render('lobby', {  title: 'Lobby'});
-                 }
-             })
+                if (!response) {
+                    res.render('login', { title: 'Login', error: 'Incorrect data'})
+                } else {
+                    req.session.user = user.username;
+                    res.redirect('lobby');
+                }
+            })
         }
     });
-});
-
-login.get('/logout', function (req, res) {
+}
+function logoutUser(req, res) {
     req.session.destroy();
     res.render('login', {title: 'Login', error: ''})
-});
-
+}
 module.exports = login;

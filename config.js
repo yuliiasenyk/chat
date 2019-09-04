@@ -2,6 +2,8 @@ const config = require('config');
 
 const dbConfig = config.get('mongoose');
 
+
+
 // const env = process.env.NODE_ENV; // 'dev' or 'test'
 //
 // const dev = {
@@ -31,4 +33,4 @@ const dbConfig = config.get('mongoose');
 //     test
 // };
 //
-// module.exports = config[env];
+ module.exports = config;

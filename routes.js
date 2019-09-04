@@ -6,24 +6,27 @@ const notFound = require('./routes/notFound');
 const register = require('./routes/register');
 const room = require('./routes/room');
 
-router.get('/', function (req, res) {
-    res.render('login', { title: 'Login'})
+
+// router.use(function(req, res, next) {
+//     if (req.session.user == null){
+//         res.redirect('login');
+//     }   else{
+//         res.redirect('lobby');
+//     }
+// });
+
+router.get('/', (req, res) => {
+    if (req.session.user == null){
+        res.redirect('login');
+    } else {
+        res.redirect('lobby');
+    }
 })
 
-router.use(login);
-router.use(lobby);
-router.use(register);
-router.use(room);
-router.use(notFound);
-
-router.get('/', function (req, res, next) {
-    try {
-        throw new Error('BROKEN');
-        res.render('login', { title: 'Login'});
-    }
-    catch(e) {
-        next(e)
-    }
-});
+router.get('/login', router.use(login));
+router.get('/lobby', router.use(lobby));
+router.get('/register', router.use(register));
+router.get('/room', router.use(room));
+router.get('/notFound', router.use(notFound));
 
 module.exports = router;

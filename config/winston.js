@@ -26,12 +26,15 @@ const logger = winston.createLogger({
 
 logger.stream = {
     write: function(message, encoding) {
-        logger.info(message);
+        logger.info(message.slice(0, -1).replace(/\u001b\[[0-9]{1,2}m/g, ''));
     },
 };
 if (process.env.NODE_ENV !== 'production') {
     logger.add(new winston.transports.Console({
-        format: winston.format.simple()
+        format: winston.format.combine(
+            winston.format.colorize(),
+            winston.format.simple()
+        )
     }));
 }
 

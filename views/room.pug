@@ -11,13 +11,15 @@ html
             button.btn.btn-secondary Log out
         div.block-panel
         h2.block-panel-heading.text-center= roomName
+        strong.col-sm-offset-11= members
+        br
         div.row.message-input
             div.col-lg-12
                 div.input-group
                     span.input-group-btn
                         form(method='POST', action='/room')
                             button.btn.btn-default(type="submit") Send
-                            input.form-control(name='message', id="m")
+                            input.form-control(name='message', id="m" autofocus="" required='')
         div.panel.panel-default
             div.panel-body.chat-body
                 ul(id="messages")

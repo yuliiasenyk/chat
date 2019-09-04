@@ -5,28 +5,53 @@ const morgan = require('morgan');
 const routes = require('./routes');
 const PORT = process.env.PORT || 3000;
 const pug = require('pug');
+const Message = require('./models/message');
 const session = require('express-session');
 const errorHandler = require('./errorHandler');
 const logger = require('./config/winston');
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const Message = require('./models/message');
-const currentUser = "admin";
-const currentRoom = 'yyy';
+const async = require("async");
+const config = require('./config');
 
-app.use(session({
-    secret: '2C44-4D44-WppQ38S',
-    resave: true,
-    saveUninitialized: true
-}));
+// const socket = require('./socket')
+// const sessionInit = require('./session')
 
-app.locals.user = currentUser;
-app.use((req, res, next) => {
-    res.locals.room = currentRoom;
-    next();
-});
+app.use(session(config.get('session')));
 
-io.on('connection', (socket) => {
+app.use(initSession);
+
+io.on('connection', InitSocketConnection);
+
+// io.on('connection', (socket, msg, data) => {
+//     socket.on('chat message', async.waterfall([
+//         createMessage (msg),
+//         emitMessage (data),
+//         ]))
+// })
+
+app.set('view engine', 'pug');
+
+app.use(express.static('assets'));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(morgan('dev',{ stream: logger.stream }));
+
+app.use(routes);
+
+app.use(errorHandler);
+
+function initSession(req, res, next) {
+    if (req.session && req.session.user) {
+        currentUser = req.session.user;
+        currentRoom = req.session.room;
+        next();
+    } else {
+        next();
+    }
+}
+function InitSocketConnection(socket) {
     socket.on('chat message', (msg) => {
         Message.create({
             text: msg,
@@ -35,29 +60,11 @@ io.on('connection', (socket) => {
             room: currentRoom,
         }).then((data) => {
             if (data) {
-                socket.emit('chat message', msg, currentUser);
-             }
+                io.emit('chat message', msg, currentUser, currentRoom);
+            }
         });
     });
-});
-io.on('connection', function(socket){
-    console.log('a user connected');
-    socket.on('disconnect', function(){
-        console.log('user disconnected');
-    });
-});
-app.set('view engine', 'pug');
-
-app.use(express.static('assets'));
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(morgan('dev',
-    { stream: logger.stream }));
-
-app.use(routes);
-
-app.use(errorHandler);
+}
 
 http.listen(PORT, logger.verbose('app is on'));
 
