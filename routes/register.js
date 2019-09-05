@@ -3,16 +3,17 @@ const register = express.Router();
 const User = require('.././models/user');
 const { check, validationResult } = require('express-validator');
 const logger = require('../config/winston');
-
-register.get('/register', function (req, res) {
-    res.render('register', { title: 'Registration'})
-});
-
-register.post('/newUser', [
+const validators = [
     check('username').isLength({ min: 1 }),
     check('email').isEmail(),
     check('password').isLength({ min: 1 })
-], (req, res) => {
+]
+
+register.get('/', renderRegister);
+
+register.post('/newUser', validators, signUp);
+
+function signUp(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
@@ -27,10 +28,13 @@ register.post('/newUser', [
         }).then((user) => {
             if(user) {
                 req.session.user = user.username;
-                res.redirect('lobby');
+                res.redirect('/lobby');
             }
         })})
-});
+}
+function renderRegister(req, res) {
+    res.render('register', { title: 'Registration'})
+}
 
 module.exports = register;
 

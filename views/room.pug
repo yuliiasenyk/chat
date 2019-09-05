@@ -7,8 +7,10 @@ html
     body
         a(href='/lobby')
             button.btn.btn-lg.btn-primary Lobby
-        a.pull-right(href='/logout')
+        a.pull-right(href='/login/logout')
             button.btn.btn-secondary Log out
+        br
+        h3= user
         div.block-panel
         h2.block-panel-heading.text-center= roomName
         strong.col-sm-offset-11= members

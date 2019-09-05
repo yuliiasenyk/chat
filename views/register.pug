@@ -1,7 +1,7 @@
 html
     include includes/head
     body
-        form.block-panel(action='/newUser' method='POST')
+        form.block-panel(action='/register/newUser' method='POST')
             h2.block-panel-heading New account
             input.form-control.credentials(placeholder="Username" name='username' required="" autofocus="")
             input.form-control.credentials(placeholder="Email address" name='email' required="")

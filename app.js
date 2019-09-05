@@ -13,22 +13,13 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const async = require("async");
 const config = require('./config');
-
-// const socket = require('./socket')
-// const sessionInit = require('./session')
+let User = require('./models/user');
 
 app.use(session(config.get('session')));
 
 app.use(initSession);
 
 io.on('connection', InitSocketConnection);
-
-// io.on('connection', (socket, msg, data) => {
-//     socket.on('chat message', async.waterfall([
-//         createMessage (msg),
-//         emitMessage (data),
-//         ]))
-// })
 
 app.set('view engine', 'pug');
 
@@ -45,12 +36,16 @@ app.use(errorHandler);
 function initSession(req, res, next) {
     if (req.session && req.session.user) {
         currentUser = req.session.user;
-        currentRoom = req.session.room;
+        User.findOne({username: currentUser}, (err, user) => {
+            currentRoom = user.currentRoom;
+            console.log('app room:', currentRoom);
+        });
         next();
     } else {
         next();
     }
 }
+
 function InitSocketConnection(socket) {
     socket.on('chat message', (msg) => {
         Message.create({
@@ -61,6 +56,7 @@ function InitSocketConnection(socket) {
         }).then((data) => {
             if (data) {
                 io.emit('chat message', msg, currentUser, currentRoom);
+                // socket.broadcast.to(id).emit('chat message', msg, currentUser, currentRoom);
             }
         });
     });

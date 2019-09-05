@@ -1,9 +1,7 @@
 html
     include includes/head
-    script
-        include ./js/toggleMembership.js
     body
-        a.pull-right(href='/logout')
+        a.pull-right(href='/login/logout')
             button.btn.btn-secondary Log out
         div.block-panel
             div.row
@@ -17,7 +15,6 @@ html
             div.list-group
                 each val in rooms
                     a.list-group-item(href='/'+val.url)= val.title
-                    button.btn.btn-sm.btn-link join or leave
         div= groups
         script(src='https://code.jquery.com/jquery.js')
             include js/bootstrap.min.js

@@ -4,29 +4,20 @@ const login = require('./routes/login');
 const lobby = require('./routes/lobby');
 const notFound = require('./routes/notFound');
 const register = require('./routes/register');
+const joinRoom = require('./routes/joinRoom');
 const room = require('./routes/room');
 
 
-// router.use(function(req, res, next) {
-//     if (req.session.user == null){
-//         res.redirect('login');
-//     }   else{
-//         res.redirect('lobby');
-//     }
-// });
+router.get('/', authRoute)
+router.use('/login', login);
+router.use('/lobby', lobby);
+router.use('/register', register);
+router.use('/room', room);
+router.use('/join', joinRoom);
+router.use('/notFound', notFound);
 
-router.get('/', (req, res) => {
-    if (req.session.user == null){
-        res.redirect('login');
-    } else {
-        res.redirect('lobby');
-    }
-})
-
-router.get('/login', router.use(login));
-router.get('/lobby', router.use(lobby));
-router.get('/register', router.use(register));
-router.get('/room', router.use(room));
-router.get('/notFound', router.use(notFound));
+function authRoute(req, res)  {
+    (req.session.user == null) ?  res.redirect('login') : res.redirect('lobby');
+}
 
 module.exports = router;

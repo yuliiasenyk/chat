@@ -3,21 +3,23 @@ const login = express.Router();
 const User = require('.././models/user');
 const logger = require('../config/winston');
 
-login.authenticated = function(req, res, next) {
-    if (req.session.user)
-            return next();
-    else
-        return res.sendStatus(401);
-};
+login.authenticated = authenticate;
 
-login.get('/login', function (req, res) {
-    res.render('login', { title: 'Login', error: ''})
-});
+login.get('/',  renderLogin);
 
 login.post('/auth', loginUser);
 
 login.get('/logout', logoutUser);
 
+function authenticate(req, res, next) {
+    if (req.session.user)
+        return next();
+    else
+        return res.sendStatus(401);
+}
+function renderLogin(req, res) {
+    res.render('login', { title: 'Login', error: ''})
+}
 function loginUser(req, res) {
     logger.verbose(`BODY: `, req.body);
     User.findOne({email: req.body.email}).then(function (user) {
@@ -31,7 +33,7 @@ function loginUser(req, res) {
                     res.render('login', { title: 'Login', error: 'Incorrect data'})
                 } else {
                     req.session.user = user.username;
-                    res.redirect('lobby');
+                    res.redirect('/lobby');
                 }
             })
         }
@@ -39,6 +41,7 @@ function loginUser(req, res) {
 }
 function logoutUser(req, res) {
     req.session.destroy();
-    res.render('login', {title: 'Login', error: ''})
+    res.redirect('/login');
 }
+
 module.exports = login;

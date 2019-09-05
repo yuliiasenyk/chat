@@ -1,11 +1,11 @@
 html
     include includes/head
     body
-        form.block-panel(action='/auth' method='POST')
+        form.block-panel(action='/login/auth' method='POST')
             h2.block-panel-heading Sign in
             input.form-control.credentials(type="text" name='email' placeholder="Email address" required="" autofocus="")
             input.form-control.credentials(type="password" name='pass' placeholder="Password" required="")
-            p.text-danger=error
+            p.text-danger= error
             label.checkbox Remember me
                 input(type="checkbox" value="remember-me")
             button.btn.btn-lg.btn-primary.btn-block(type="submit") Login

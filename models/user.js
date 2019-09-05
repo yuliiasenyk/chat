@@ -17,7 +17,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    groups: Array,
+    groups: [String],
+    currentRoom: String,
 });
 
 userSchema.methods = {
